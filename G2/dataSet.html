@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>G2</title>
+    <style>
+        #app {
+            margin: 50px auto;
+            text-align: center;
+        }
+    </style>
+</head>
+<!--vue-->
+<script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+<!-- 引入G2在线资源 -->
+<script src="https://gw.alipayobjects.com/os/lib/antv/g2/3.4.10/dist/g2.min.js"></script>
+<!--data-set-->
+<script src="https://unpkg.com/@antv/data-set"></script>
+
+<body>
+    <div id="app">
+        <div id="c1"></div>
+        <button @click="clickBtn">点击</button>
+        <button @click="clickBtn2">点击2</button>
+    </div>
+    <script>
+        var app = new Vue({
+            el: '#app',
+            data: {
+                chart: null,
+                data: [
+                    { genre: 'Sports', sold: 275, type: 2 },
+                    { genre: 'Strategy', sold: 115, type: 0 },
+                    { genre: 'Action', sold: 120, type: 1 }
+                ]
+            },
+            mounted() {
+                this.initComponent()
+            },
+            methods: {
+                initComponent() {
+                    const chart = new G2.Chart({
+                        container: 'c1',
+                        width: 600,
+                        height: 300
+                    })
+                    chart.source(this.data, {
+                        sold: {
+                            min: 0,
+                            max: 300,
+                            formatter: val => {
+                                return val + '人'
+                            }
+                        }
+                    })
+                    chart
+                        .interval()
+                        .position('genre*sold')
+                        .color('genre')
+
+                    this.chart = chart
+                    this.chart.render()
+                },
+                clickBtn() {
+                    this.data[0]['sold'] = 300
+                    this.chart.source(this.data)
+                    console.log(this.data)
+                },
+                clickBtn2() {
+                    console.log(this.data)
+                    this.chart.repaint()
+                }
+            }
+        })
+    </script>
+</body>
+
+</html>
